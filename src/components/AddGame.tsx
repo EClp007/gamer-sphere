@@ -15,7 +15,7 @@ interface Alert {
 }
 
 function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) => void; }) {
-    const [game, setGame] = useState<Game>({title:"", rating:0, developer:"", releaseYear:2000});
+    const [game, setGame] = useState<Game>({title:"", rating:0, developer:"", releaseYear:1970});
     const [showAlert, setAlert] = useState<Alert>({active: false, message: "", color: ""});
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
         } else {
             setAlert({active: true, message: "Game added successfully.", color: "success"})
             props.onSubmit(game);
-            setGame({ title: "", rating: 0, developer: "", releaseYear: 2000 });
+            setGame({ title: "", rating: 0, developer: "", releaseYear: 1970 });
         }
         event.preventDefault();
     }
@@ -55,16 +55,21 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
                             onChange={handleChange}
                         />
                 </div>
+                <label htmlFor="InputGameRating">Rating</label>
                 <div className="mb-3">
-                    <label htmlFor="InputGameRating">Rating</label>
+                    <div className="row">
+                        <div className="col-11">
                         <input
-                            className="form-control"
-                            type="number"
+                            className="form-range"
+                            type="range"
                             name="rating"
                             placeholder="Enter game rating"
                             value={game.rating}
                             onChange={handleChange}
                         />
+                        </div>
+                        <div className="col">{game.rating}</div>
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="InputGameDeveloper">Developer</label>
@@ -84,6 +89,8 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
                             type="number"
                             name="releaseYear"
                             placeholder="Enter game release year"
+                            min="1970"
+                            max="2023"
                             value={game.releaseYear}
                             onChange={handleChange}
                         />

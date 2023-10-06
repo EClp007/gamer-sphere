@@ -2,8 +2,32 @@ import React from 'react';
 
 import {Game} from "./AddGame";
 
+type SortByState = "Recently added" | "Rating" | "Release year";
+
 const Catalog = (props: { games: Game[]; deleteGame: (titleOfGameThatWillBeDeleted: string) => void; }) => {
+    const [sortBy, setSortBy] = React.useState<SortByState>("Recently added");
+
+    const sortGames = () => {
+        switch (sortBy) {
+            case "Recently added":
+                return props.games;
+            case "Rating":
+                return props.games.sort((a, b) => b.rating - a.rating);
+            case "Release year":
+                return props.games.sort((a, b) => b.releaseYear - a.releaseYear);
+        }
+    }
+
     return(
+        <>
+            <select className="form-select form-select-sm" aria-label="select"
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value as SortByState)}>
+
+                <option value="Recently added">Recently added</option>
+                <option value="Rating">Rating</option>
+                <option value="Release year">Release year</option>
+            </select>
         <table className="table table-hover">
             <thead>
             <tr>
@@ -15,16 +39,21 @@ const Catalog = (props: { games: Game[]; deleteGame: (titleOfGameThatWillBeDelet
             </tr>
             </thead>
     <tbody>
-    {props.games.map((game:Game, index:number) => (
+    {(sortGames().map((game:Game, index:number) => (
         <tr key={index.toString()}>
             <th>{game.title}</th>
             <th>{game.rating}</th>
             <th>{game.developer}</th>
             <th>{game.releaseYear}</th>
             <th><button className="btn btn-danger" onClick={() => props.deleteGame(game.title)}>Delete</button></th>
-        </tr>))}
+            <th>
+                <a href={"/" + game.title} className="btn btn-primary" role="button" aria-pressed="true">i</a>
+            </th>
+
+        </tr>)))}
     </tbody>
     </table>
+        </>
     )
 }
 

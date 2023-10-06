@@ -4,9 +4,10 @@ import React, {useState} from 'react';
 import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import Home from "./components/Home";
 import './App.css'
+import DataInitializer from "./components/DataInitializer";
 
 function App() {
-    const [games, setGames] = useState<Game[]>([]);
+    const [games, setGames] = useState<Game[]>(DataInitializer);
 
     const addGame = (newGame: Game) => {
         setGames([...games, newGame]);
