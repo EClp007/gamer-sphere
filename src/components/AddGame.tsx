@@ -1,32 +1,51 @@
 import {ChangeEvent, useState} from "react";
 
+
 export interface Game {
-    title?: string
-    rating?: number
-    developer?: string
-    releaseYear?: number
+    title: string
+    rating: number
+    developer: string
+    releaseYear: number
 }
 
-function AddGame({onSubmit}:any) {
-    const [game, setGame] = useState<Game>({});
+interface Alert {
+    active: boolean
+    message: string
+    color: string
+}
+
+function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) => void; }) {
+    const [game, setGame] = useState<Game>({title:"", rating:0, developer:"", releaseYear:2000});
+    const [showAlert, setAlert] = useState<Alert>({active: false, message: "", color: ""});
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setAlert({active: false, message: "", color: ""})
         const {name, value} = event.target;
-        setGame(prevInputs => ({...game, [name]: value}));
+        setGame(() => ({...game, [name]: value}));
     }
 
     const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
+        const isDuplicateTitle = props.games.some((existingGame: { title: string; }) => existingGame.title === game.title);
+        if (isDuplicateTitle) {
+            setAlert({active: true, message: "A game with this title already exists.", color: "danger"})
+        } else {
+            setAlert({active: true, message: "Game added successfully.", color: "success"})
+            props.onSubmit(game);
+            setGame({ title: "", rating: 0, developer: "", releaseYear: 2000 });
+        }
         event.preventDefault();
-        onSubmit(game)
-        setGame({});
     }
 
 
     return (
+        <>
+        {showAlert.active && <div className={"alert alert-" + showAlert.color} role="alert">
+            {showAlert.message}
+        </div>}
         <form onSubmit={handleSubmit}>
-            <div className="text-center">
+            <div>
                 <div className="mb-3">
-                    <label htmlFor="InputGameTitle">Title
+                    <label htmlFor="InputGameTitle">Title</label>
                         <input
                             className="form-control"
                             type="text"
@@ -35,10 +54,9 @@ function AddGame({onSubmit}:any) {
                             value={game.title}
                             onChange={handleChange}
                         />
-                    </label>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="InputGameRating">Rating
+                    <label htmlFor="InputGameRating">Rating</label>
                         <input
                             className="form-control"
                             type="number"
@@ -47,10 +65,9 @@ function AddGame({onSubmit}:any) {
                             value={game.rating}
                             onChange={handleChange}
                         />
-                    </label>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="InputGameDeveloper">Developer
+                    <label htmlFor="InputGameDeveloper">Developer</label>
                         <input
                             className="form-control"
                             type="text"
@@ -59,10 +76,9 @@ function AddGame({onSubmit}:any) {
                             value={game.developer}
                             onChange={handleChange}
                         />
-                    </label>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="InputGameReleaseYear">Release Year
+                    <label htmlFor="InputGameReleaseYear">Release Year</label>
                         <input
                             className="form-control"
                             type="number"
@@ -71,12 +87,11 @@ function AddGame({onSubmit}:any) {
                             value={game.releaseYear}
                             onChange={handleChange}
                         />
-                    </label>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </div>
         </form>
-
+        </>
     )
 }
 

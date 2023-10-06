@@ -2,21 +2,33 @@ import AddGame, {Game} from "./components/AddGame";
 import Catalog from "./components/Catalog";
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
+import Home from "./components/Home";
+import './App.css'
 
 function App() {
     const [games, setGames] = useState<Game[]>([]);
 
-    const addGame = (newGame:Game) => {
+    const addGame = (newGame: Game) => {
         setGames([...games, newGame]);
+    };
+
+    const deleteGame = (titleOfGameThatWillBeDeleted: string) => {
+        setGames(prevState => prevState.filter(function (game) {
+            return game.title !== titleOfGameThatWillBeDeleted;
+        }))
     };
 
     return (
         <Router>
-            <div>
+
+            <div className="app">
+
                 <nav className="navbar navbar-expand-lg bg-light">
                     <div className="container-fluid">
                         <Link className="navbar-brand" to="/">GamerSphere</Link>
-                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                         </button>
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -31,11 +43,26 @@ function App() {
                         </div>
                     </div>
                 </nav>
-                <Routes>
-                    <Route path="/catalog" element={<Catalog games={games}/>} />
-                    <Route path="/addGame" element={<AddGame onSubmit={addGame}/>} />
-                </Routes>
+
+                <header className="header">
+                    <h1 className="h1">GamerSphere</h1>
+                    <p className="p">Your Ultimate Gaming Destination</p>
+                </header>
+
+                <section className="section">
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/catalog" element={<Catalog games={games} deleteGame={deleteGame}/>}/>
+                        <Route path="/addGame" element={<AddGame games={games} onSubmit={addGame}/>}/>
+                    </Routes>
+                </section>
+
+                <footer className="footer">
+                    <p>&copy; 2023 GamerSphere. All rights reserved.</p>
+                </footer>
+
             </div>
+
         </Router>
     );
 }
