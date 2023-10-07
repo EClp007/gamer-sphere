@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import Home from "./components/Home";
 import './App.css'
 import DataInitializer from "./components/DataInitializer";
+import GameInfo from "./components/GameInfo";
 
 function App() {
     const [games, setGames] = useState<Game[]>(DataInitializer);
@@ -55,6 +56,7 @@ function App() {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/catalog" element={<Catalog games={games} deleteGame={deleteGame}/>}/>
                         <Route path="/addGame" element={<AddGame games={games} onSubmit={addGame}/>}/>
+                        <Route path="/game/:title" element={<GameInfo />} />
                     </Routes>
                 </section>
 

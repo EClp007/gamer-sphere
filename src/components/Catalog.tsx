@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Game} from "./AddGame";
+import {Link} from "react-router-dom";
 
 type SortByState = "Recently added" | "Rating" | "Release year";
 
@@ -36,6 +37,7 @@ const Catalog = (props: { games: Game[]; deleteGame: (titleOfGameThatWillBeDelet
                 <th scope="col">Developer</th>
                 <th scope="col">Release Year</th>
                 <th/>
+                <th/>
             </tr>
             </thead>
     <tbody>
@@ -45,11 +47,14 @@ const Catalog = (props: { games: Game[]; deleteGame: (titleOfGameThatWillBeDelet
             <th>{game.rating}</th>
             <th>{game.developer}</th>
             <th>{game.releaseYear}</th>
-            <th><button className="btn btn-danger" onClick={() => props.deleteGame(game.title)}>Delete</button></th>
             <th>
-                <a href={"/" + game.title} className="btn btn-primary" role="button" aria-pressed="true">i</a>
+                <Link to={`/game/${game.title}`} state={{ game }}>
+                    <button className="btn btn-primary">
+                        i
+                    </button>
+                </Link>
             </th>
-
+            <th><button className="btn btn-danger" onClick={() => props.deleteGame(game.title)}>Delete</button></th>
         </tr>)))}
     </tbody>
     </table>

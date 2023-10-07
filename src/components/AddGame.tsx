@@ -6,6 +6,7 @@ export interface Game {
     rating: number
     developer: string
     releaseYear: number
+    cover: string
 }
 
 interface Alert {
@@ -15,7 +16,7 @@ interface Alert {
 }
 
 function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) => void; }) {
-    const [game, setGame] = useState<Game>({title:"", rating:0, developer:"", releaseYear:1970});
+    const [game, setGame] = useState<Game>({title: "", rating: 0, developer: "", releaseYear: 1970, cover: ""});
     const [showAlert, setAlert] = useState<Alert>({active: false, message: "", color: ""});
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -25,13 +26,15 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
     }
 
     const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
-        const isDuplicateTitle = props.games.some((existingGame: { title: string; }) => existingGame.title === game.title);
+        const isDuplicateTitle = props.games.some((existingGame: {
+            title: string;
+        }) => existingGame.title === game.title);
         if (isDuplicateTitle) {
             setAlert({active: true, message: "A game with this title already exists.", color: "danger"})
         } else {
             setAlert({active: true, message: "Game added successfully.", color: "success"})
             props.onSubmit(game);
-            setGame({ title: "", rating: 0, developer: "", releaseYear: 1970 });
+            setGame({title: "", rating: 0, developer: "", releaseYear: 1970, cover: ""});
         }
         event.preventDefault();
     }
@@ -39,13 +42,13 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
 
     return (
         <>
-        {showAlert.active && <div className={"alert alert-" + showAlert.color} role="alert">
-            {showAlert.message}
-        </div>}
-        <form onSubmit={handleSubmit}>
-            <div>
-                <div className="mb-3">
-                    <label htmlFor="InputGameTitle">Title</label>
+            {showAlert.active && <div className={"alert alert-" + showAlert.color} role="alert">
+                {showAlert.message}
+            </div>}
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <div className="mb-3">
+                        <label htmlFor="InputGameTitle">Title</label>
                         <input
                             className="form-control"
                             type="text"
@@ -54,25 +57,25 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
                             value={game.title}
                             onChange={handleChange}
                         />
-                </div>
-                <label htmlFor="InputGameRating">Rating</label>
-                <div className="mb-3">
-                    <div className="row">
-                        <div className="col-11">
-                        <input
-                            className="form-range"
-                            type="range"
-                            name="rating"
-                            placeholder="Enter game rating"
-                            value={game.rating}
-                            onChange={handleChange}
-                        />
-                        </div>
-                        <div className="col">{game.rating}</div>
                     </div>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="InputGameDeveloper">Developer</label>
+                    <label htmlFor="InputGameRating">Rating</label>
+                    <div className="mb-3">
+                        <div className="row">
+                            <div className="col-11">
+                                <input
+                                    className="form-range"
+                                    type="range"
+                                    name="rating"
+                                    placeholder="Enter game rating"
+                                    value={game.rating}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col">{game.rating}</div>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="InputGameDeveloper">Developer</label>
                         <input
                             className="form-control"
                             type="text"
@@ -81,9 +84,9 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
                             value={game.developer}
                             onChange={handleChange}
                         />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="InputGameReleaseYear">Release Year</label>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="InputGameReleaseYear">Release Year</label>
                         <input
                             className="form-control"
                             type="number"
@@ -94,10 +97,17 @@ function AddGame(props: { games: { title: string; }[]; onSubmit: (game: Game) =>
                             value={game.releaseYear}
                             onChange={handleChange}
                         />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="InputGameCover" className="form-label">Cover</label>
+                        <input className="form-control"
+                               type="file"
+                               name="cover"
+                               value={game.cover}/>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit</button>
                 </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </div>
-        </form>
+            </form>
         </>
     )
 }
